@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import {hi} from './util'
+import {randomHead} from './util'
 
 export default function Home() {
   return (
@@ -17,7 +17,7 @@ export default function Home() {
           >
             By{' '}
             <Image
-              src="/beans.png"
+              src={randomHead()}
               alt="Vercel Logo"
               className="dark:invert"
               width={100}
