@@ -37,7 +37,7 @@ export default function Home() {
         </p>
         {currentState &&
           (rebuildMode ? (
-            <p>Haha just kidding!</p>
+            <p>Not build yet!</p>
           ) : (
             Object.entries(currentState).map((item, index) => (
               <Image
@@ -58,13 +58,15 @@ export default function Home() {
             />
             <Button
               onClick={() => setRefreshIndex(refreshIndex + 1)}
-              buttonText="Refresh"
+              buttonText="Change Snowman"
+              variant="dull"
             />
           </div>
         ) : (
           <Button
             onClick={() => setRebuildMode(!rebuildMode)}
-            buttonText="Just Kidding!"
+            buttonText="Back to Photo"
+            variant="dull"
           />
         )}
       </div>
