@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import Image from "next/image";
 import { randomAssetIndex, toAssetFileName } from "./utils";
+import Button from "./components/Button";
 
 interface CurrentState {
   hat: number;
@@ -49,12 +50,23 @@ export default function Home() {
               />
             ))
           ))}
-        <button
-          className="mt-3 bg-blue-300 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out transform"
-          onClick={() => setRefreshIndex(refreshIndex + 1)}
-        >
-          Refresh
-        </button>
+        {!rebuildMode ? (
+          <div className="flex gap-4">
+            <Button
+              onClick={() => setRebuildMode(!rebuildMode)}
+              buttonText="Let's Rebuild!"
+            />
+            <Button
+              onClick={() => setRefreshIndex(refreshIndex + 1)}
+              buttonText="Refresh"
+            />
+          </div>
+        ) : (
+          <Button
+            onClick={() => setRebuildMode(!rebuildMode)}
+            buttonText="Just Kidding!"
+          />
+        )}
       </div>
     </main>
   );
