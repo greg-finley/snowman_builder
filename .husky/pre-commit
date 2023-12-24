@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+npm run lint
+
+if ! git diff --quiet; then
+  echo "Staging linted files..."
+  git add .
+
+  echo "Linted files have been staged. Please review changes before committing."
+fi
