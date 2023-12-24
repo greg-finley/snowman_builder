@@ -1,7 +1,17 @@
+'use client';
+
+import React, { useEffect, useState } from 'react';
+
 import Image from 'next/image'
 import {randomHead} from './util'
 
 export default function Home() {
+  const [head, setHead] = useState('');
+
+  useEffect(() => {
+    setHead(randomHead()); // Call the function when the component mounts
+  }, []); // The empty array ensures this effect runs once on mount
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
@@ -16,14 +26,14 @@ export default function Home() {
             rel="noopener noreferrer"
           >
             By{' '}
-            <Image
-              src={randomHead()}
+            {head && <Image
+              src={head}
               alt="Vercel Logo"
               className="dark:invert"
               width={100}
               height={24}
               priority
-            />
+            />}
           </a>
         </div>
       </div>
