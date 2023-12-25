@@ -7,6 +7,7 @@ import Button from "./components/Button";
 import { snowmanParts, CurrentState, GuessState, SnowmanPart } from "./types";
 import CompletedSnowman from "./components/CompletedSnowman";
 import SnowmanPartOptions from "./components/SnowmanPartOptions";
+import _ from "lodash";
 
 export default function Home() {
   const [refreshIndex, setRefreshIndex] = useState(0); // Just for the useEffect
@@ -40,6 +41,12 @@ export default function Home() {
     setGuessMode(nextPart);
   };
 
+  const handleStartOver = () => {
+    setRefreshIndex(refreshIndex + 1);
+    setGuessState({});
+    setGuessMode(null);
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <div className="z-10 max-w-5xl w-full flex-col items-center font-mono text-sm lg:flex">
@@ -66,9 +73,21 @@ export default function Home() {
             </div>
           ) : guessMode === "done" ? (
             // Player is done guessing
-            <div>
-              <CompletedSnowman currentState={guessState} />
-              <CompletedSnowman currentState={currentState} />
+            <div className="flex flex-col items-center space-y-4">
+              <div className="flex space-x-6">
+                <CompletedSnowman
+                  currentState={guessState}
+                  label="Your guess"
+                />
+                <CompletedSnowman
+                  currentState={currentState}
+                  label="Billy's snowman"
+                />
+              </div>
+              <p>
+                {_.isEqual(currentState, guessState) ? "Correct!" : "Wrong!"}
+              </p>
+              <Button onClick={handleStartOver} buttonText="New Snowman" />
             </div>
           ) : (
             // Player is at the initial app screen
