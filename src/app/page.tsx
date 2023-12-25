@@ -13,9 +13,9 @@ type CurrentState = {
 type GuessState = Partial<CurrentState>;
 
 export default function Home() {
+  const [refreshIndex, setRefreshIndex] = useState(0); // Just for the useEffect
   const [currentState, setCurrentState] = useState<CurrentState | null>(null);
   const [guessState, setGuessState] = useState<GuessState | null>(null);
-  const [refreshIndex, setRefreshIndex] = useState(0);
   const [guessMode, setGuessMode] = useState<AssetType | null>(null);
 
   useEffect(() => {
@@ -25,6 +25,11 @@ export default function Home() {
       body: randomAssetIndex(),
     });
   }, [refreshIndex]);
+
+  const handleBackToPhoto = () => {
+    setGuessState(null);
+    setGuessMode(null);
+  };
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
@@ -79,7 +84,7 @@ export default function Home() {
           </div>
         ) : (
           <Button
-            onClick={() => setGuessMode(null)}
+            onClick={handleBackToPhoto}
             buttonText="Back to Photo"
             variant="dull"
           />
