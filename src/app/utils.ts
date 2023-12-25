@@ -1,6 +1,10 @@
 import _ from "lodash";
 
-export const randomAssetIndex = () => _.sample([0, 1, 2, 3]) as number;
+export type AssetType = "hat" | "head" | "body";
 
-export const toAssetFileName = (assetName: string, index: number) =>
-  `/${assetName}${index}.png`;
+export const indexes = [0, 1, 2, 3];
+
+export const randomAssetIndex = () => _.sample(indexes) as number;
+
+export const toAssetFileName = (assetType: AssetType, index: number) =>
+  `/${assetType}${index}.png`;

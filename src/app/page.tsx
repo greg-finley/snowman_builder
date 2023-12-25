@@ -3,19 +3,20 @@
 import React, { useEffect, useState } from "react";
 
 import Image from "next/image";
-import { randomAssetIndex, toAssetFileName } from "./utils";
+import { indexes, randomAssetIndex, toAssetFileName, AssetType } from "./utils";
 import Button from "./components/Button";
 
-interface CurrentState {
-  hat: number;
-  head: number;
-  body: number;
-}
+type CurrentState = {
+  [key in AssetType]: number;
+};
+
+type GuessState = Partial<CurrentState>;
 
 export default function Home() {
   const [currentState, setCurrentState] = useState<CurrentState | null>(null);
+  const [guessState, setGuessState] = useState<GuessState | null>(null);
   const [refreshIndex, setRefreshIndex] = useState(0);
-  const [rebuildMode, setRebuildMode] = useState(false);
+  const [guessMode, setGuessMode] = useState<AssetType | null>(null);
 
   useEffect(() => {
     setCurrentState({
@@ -33,27 +34,41 @@ export default function Home() {
           <br />
           He snapped a picture before it happened.
           <br />
-          Take a gander and then help him rebuild it!
+          Take a look and then help him rebuild it!
         </p>
         {currentState &&
-          (rebuildMode ? (
-            <p>Not build yet!</p>
+          (guessMode ? (
+            <div>
+              <p>Which {guessMode} was it?</p>
+              {indexes.map((index) => (
+                <Image
+                  key={index + guessMode}
+                  src={toAssetFileName(guessMode, index)}
+                  alt=""
+                  width={100}
+                  height={24}
+                  priority
+                />
+              ))}
+            </div>
           ) : (
-            Object.entries(currentState).map((item, index) => (
-              <Image
-                key={index}
-                src={toAssetFileName(item[0], item[1])}
-                alt=""
-                width={100}
-                height={24}
-                priority
-              />
-            ))
+            (Object.entries(currentState) as [[AssetType, number]]).map(
+              (item, index) => (
+                <Image
+                  key={index}
+                  src={toAssetFileName(item[0], item[1])}
+                  alt=""
+                  width={100}
+                  height={24}
+                  priority
+                />
+              ),
+            )
           ))}
-        {!rebuildMode ? (
+        {!guessMode ? (
           <div className="flex gap-4">
             <Button
-              onClick={() => setRebuildMode(!rebuildMode)}
+              onClick={() => setGuessMode("hat")}
               buttonText="Let's Rebuild!"
             />
             <Button
@@ -64,7 +79,7 @@ export default function Home() {
           </div>
         ) : (
           <Button
-            onClick={() => setRebuildMode(!rebuildMode)}
+            onClick={() => setGuessMode(null)}
             buttonText="Back to Photo"
             variant="dull"
           />
