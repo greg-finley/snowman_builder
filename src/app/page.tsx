@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 
-import Image from "next/image";
-import { indexes, randomAssetIndex, toAssetFileName } from "./utils";
+import { randomAssetIndex } from "./utils";
 import Button from "./components/Button";
 import { snowmanParts, CurrentState, GuessState, SnowmanPart } from "./types";
-import _ from "lodash";
+import CompletedSnowman from "./components/CompletedSnowman";
+import SnowmanPartOptions from "./components/SnowmanPartOptions";
 
 export default function Home() {
   const [refreshIndex, setRefreshIndex] = useState(0); // Just for the useEffect
@@ -52,40 +52,12 @@ export default function Home() {
         </p>
         {currentState &&
           (guessMode && guessMode !== "done" ? (
-            <div>
-              <p>Which {guessMode} was it?</p>
-              <div className="flex flex-wrap gap-2">
-                {_.shuffle(indexes).map((index) => (
-                  <div
-                    key={index + guessMode}
-                    className="cursor-pointer"
-                    onClick={() => handleGuess(guessMode, index)}
-                  >
-                    <Image
-                      key={index + guessMode}
-                      src={toAssetFileName(guessMode, index)}
-                      alt=""
-                      width={100}
-                      height={24}
-                      priority
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
+            <SnowmanPartOptions
+              handleGuess={handleGuess}
+              snowmanPart={guessMode}
+            />
           ) : (
-            (Object.entries(currentState) as [[SnowmanPart, number]]).map(
-              (item, index) => (
-                <Image
-                  key={index}
-                  src={toAssetFileName(item[0], item[1])}
-                  alt=""
-                  width={100}
-                  height={24}
-                  priority
-                />
-              ),
-            )
+            <CompletedSnowman currentState={currentState} />
           ))}
         {!guessMode ? (
           <div className="flex gap-4">
