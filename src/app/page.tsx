@@ -6,12 +6,13 @@ import Image from "next/image";
 import { indexes, randomAssetIndex, toAssetFileName } from "./utils";
 import Button from "./components/Button";
 import { snowmanParts, CurrentState, GuessState, SnowmanPart } from "./types";
+import { set } from "lodash";
 
 export default function Home() {
   const [refreshIndex, setRefreshIndex] = useState(0); // Just for the useEffect
   const [currentState, setCurrentState] = useState<CurrentState | null>(null);
   const [guessState, setGuessState] = useState<GuessState | null>(null);
-  const [guessMode, setGuessMode] = useState<SnowmanPart | null>(null);
+  const [guessMode, setGuessMode] = useState<SnowmanPart | null | "done">(null);
 
   useEffect(() => {
     setCurrentState({
@@ -26,6 +27,19 @@ export default function Home() {
     setGuessMode(null);
   };
 
+  const handleGuess = (guessMode: SnowmanPart, guess: number) => {
+    setGuessState((prevState) => {
+      if (prevState) {
+        return { ...prevState, [guessMode]: guess };
+      } else {
+        return { [guessMode]: guess };
+      }
+    });
+    const nextPart =
+      snowmanParts[snowmanParts.indexOf(guessMode) + 1] ?? "done";
+    setGuessMode(nextPart);
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <div className="z-10 max-w-5xl w-full flex-col items-center font-mono text-sm lg:flex">
@@ -37,7 +51,7 @@ export default function Home() {
           Take a look and then help him rebuild it!
         </p>
         {currentState &&
-          (guessMode ? (
+          (guessMode && guessMode !== "done" ? (
             <div>
               <p>Which {guessMode} was it?</p>
               {indexes.map((index) => (
@@ -47,6 +61,7 @@ export default function Home() {
                   alt=""
                   width={100}
                   height={24}
+                  onClick={() => handleGuess(guessMode, index)}
                   priority
                 />
               ))}
