@@ -56,15 +56,20 @@ export default function Home() {
               <p>Which {guessMode} was it?</p>
               <div className="flex flex-wrap gap-2">
                 {_.shuffle(indexes).map((index) => (
-                  <Image
+                  <div
                     key={index + guessMode}
-                    src={toAssetFileName(guessMode, index)}
-                    alt=""
-                    width={100}
-                    height={24}
+                    className="cursor-pointer"
                     onClick={() => handleGuess(guessMode, index)}
-                    priority
-                  />
+                  >
+                    <Image
+                      key={index + guessMode}
+                      src={toAssetFileName(guessMode, index)}
+                      alt=""
+                      width={100}
+                      height={24}
+                      priority
+                    />
+                  </div>
                 ))}
               </div>
             </div>
