@@ -52,32 +52,35 @@ export default function Home() {
         </p>
         {currentState &&
           (guessMode && guessMode !== "done" ? (
-            <SnowmanPartOptions
-              handleGuess={handleGuess}
-              snowmanPart={guessMode}
-            />
+            <div>
+              <SnowmanPartOptions
+                handleGuess={handleGuess}
+                snowmanPart={guessMode}
+              />
+              <Button
+                onClick={handleBackToPhoto}
+                buttonText="Back to Photo"
+                variant="dull"
+              />
+            </div>
+          ) : guessMode === "done" ? (
+            <p>{"You're done!"}</p>
           ) : (
-            <CompletedSnowman currentState={currentState} />
+            <div>
+              <CompletedSnowman currentState={currentState} />
+              <div className="flex gap-4">
+                <Button
+                  onClick={() => setGuessMode(snowmanParts[0])}
+                  buttonText="Let's Rebuild!"
+                />
+                <Button
+                  onClick={() => setRefreshIndex(refreshIndex + 1)}
+                  buttonText="Change Snowman"
+                  variant="dull"
+                />
+              </div>
+            </div>
           ))}
-        {!guessMode ? (
-          <div className="flex gap-4">
-            <Button
-              onClick={() => setGuessMode(snowmanParts[0])}
-              buttonText="Let's Rebuild!"
-            />
-            <Button
-              onClick={() => setRefreshIndex(refreshIndex + 1)}
-              buttonText="Change Snowman"
-              variant="dull"
-            />
-          </div>
-        ) : (
-          <Button
-            onClick={handleBackToPhoto}
-            buttonText="Back to Photo"
-            variant="dull"
-          />
-        )}
       </div>
     </main>
   );
