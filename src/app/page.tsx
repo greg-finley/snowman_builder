@@ -92,7 +92,10 @@ export default function Home() {
           ) : (
             // Player is at the initial app screen
             <div>
-              <CompletedSnowman currentState={currentState} />
+              <CompletedSnowman
+                currentState={currentState}
+                label="Billy's snowman before it melted"
+              />
               <div className="flex gap-4">
                 <Button
                   onClick={() => setGuessMode(snowmanParts[0])}
