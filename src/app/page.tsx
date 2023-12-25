@@ -52,6 +52,7 @@ export default function Home() {
         </p>
         {currentState &&
           (guessMode && guessMode !== "done" ? (
+            // Player is guessing the various parts of the snowman
             <div>
               <SnowmanPartOptions
                 handleGuess={handleGuess}
@@ -64,11 +65,13 @@ export default function Home() {
               />
             </div>
           ) : guessMode === "done" ? (
+            // Player is done guessing
             <div>
               <CompletedSnowman currentState={guessState} />
               <CompletedSnowman currentState={currentState} />
             </div>
           ) : (
+            // Player is at the initial app screen
             <div>
               <CompletedSnowman currentState={currentState} />
               <div className="flex gap-4">
