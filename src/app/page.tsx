@@ -76,12 +76,12 @@ export default function Home() {
             <div className="flex flex-col items-center space-y-4">
               <div className="flex space-x-6">
                 <CompletedSnowman
-                  currentState={guessState}
-                  label="Your guess"
-                />
-                <CompletedSnowman
                   currentState={currentState}
                   label="Billy's snowman"
+                />
+                <CompletedSnowman
+                  currentState={guessState}
+                  label="Your guess"
                 />
               </div>
               <p>
