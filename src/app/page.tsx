@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { indexes, randomAssetIndex, toAssetFileName } from "./utils";
 import Button from "./components/Button";
-import { CurrentState, GuessState, SnowmanPart } from "./types";
+import { snowmanParts, CurrentState, GuessState, SnowmanPart } from "./types";
 
 export default function Home() {
   const [refreshIndex, setRefreshIndex] = useState(0); // Just for the useEffect
@@ -68,7 +68,7 @@ export default function Home() {
         {!guessMode ? (
           <div className="flex gap-4">
             <Button
-              onClick={() => setGuessMode("hat")}
+              onClick={() => setGuessMode(snowmanParts[0])}
               buttonText="Let's Rebuild!"
             />
             <Button
