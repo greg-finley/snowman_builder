@@ -13,7 +13,9 @@ export default function Home() {
   const [refreshIndex, setRefreshIndex] = useState(0); // Just for the useEffect
   const [currentState, setCurrentState] = useState<CurrentState | null>(null);
   const [guessState, setGuessState] = useState<GuessState>({});
-  const [guessMode, setGuessMode] = useState<SnowmanPart | null | "done">(null);
+  const [guessMode, setGuessMode] = useState<SnowmanPart | "start" | "done">(
+    "start",
+  );
 
   useEffect(() => {
     setCurrentState({
@@ -25,7 +27,7 @@ export default function Home() {
 
   const handleBackToPhoto = () => {
     setGuessState({});
-    setGuessMode(null);
+    setGuessMode("start");
   };
 
   const handleGuess = (guessMode: SnowmanPart, guess: number) => {
@@ -44,7 +46,7 @@ export default function Home() {
   const handleStartOver = () => {
     setRefreshIndex(refreshIndex + 1);
     setGuessState({});
-    setGuessMode(null);
+    setGuessMode("start");
   };
 
   return (
@@ -58,7 +60,26 @@ export default function Home() {
           Take a look and then help him rebuild it!
         </p>
         {currentState &&
-          (guessMode && guessMode !== "done" ? (
+          (guessMode === "start" ? (
+            // Player is at the initial app screen
+            <div>
+              <CompletedSnowman
+                currentState={currentState}
+                label="Billy's snowman, before it melted"
+              />
+              <div className="flex gap-4">
+                <Button
+                  onClick={() => setGuessMode(snowmanParts[0])}
+                  buttonText="Let's Rebuild!"
+                />
+                <Button
+                  onClick={() => setRefreshIndex(refreshIndex + 1)}
+                  buttonText="Change Snowman"
+                  variant="dull"
+                />
+              </div>
+            </div>
+          ) : guessMode !== "done" ? (
             // Player is guessing the various parts of the snowman
             <div>
               <SnowmanPartOptions
@@ -71,7 +92,7 @@ export default function Home() {
                 variant="dull"
               />
             </div>
-          ) : guessMode === "done" ? (
+          ) : (
             // Player is done guessing
             <div className="flex flex-col items-center space-y-4">
               <div className="flex space-x-6">
@@ -88,25 +109,6 @@ export default function Home() {
                 {_.isEqual(currentState, guessState) ? "Correct!" : "Wrong!"}
               </p>
               <Button onClick={handleStartOver} buttonText="New Snowman" />
-            </div>
-          ) : (
-            // Player is at the initial app screen
-            <div>
-              <CompletedSnowman
-                currentState={currentState}
-                label="Billy's snowman before it melted"
-              />
-              <div className="flex gap-4">
-                <Button
-                  onClick={() => setGuessMode(snowmanParts[0])}
-                  buttonText="Let's Rebuild!"
-                />
-                <Button
-                  onClick={() => setRefreshIndex(refreshIndex + 1)}
-                  buttonText="Change Snowman"
-                  variant="dull"
-                />
-              </div>
             </div>
           ))}
       </div>
