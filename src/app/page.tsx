@@ -6,7 +6,7 @@ import Image from "next/image";
 import { indexes, randomAssetIndex, toAssetFileName } from "./utils";
 import Button from "./components/Button";
 import { snowmanParts, CurrentState, GuessState, SnowmanPart } from "./types";
-import { set } from "lodash";
+import _ from "lodash";
 
 export default function Home() {
   const [refreshIndex, setRefreshIndex] = useState(0); // Just for the useEffect
@@ -54,17 +54,19 @@ export default function Home() {
           (guessMode && guessMode !== "done" ? (
             <div>
               <p>Which {guessMode} was it?</p>
-              {indexes.map((index) => (
-                <Image
-                  key={index + guessMode}
-                  src={toAssetFileName(guessMode, index)}
-                  alt=""
-                  width={100}
-                  height={24}
-                  onClick={() => handleGuess(guessMode, index)}
-                  priority
-                />
-              ))}
+              <div className="flex flex-wrap gap-2">
+                {_.shuffle(indexes).map((index) => (
+                  <Image
+                    key={index + guessMode}
+                    src={toAssetFileName(guessMode, index)}
+                    alt=""
+                    width={100}
+                    height={24}
+                    onClick={() => handleGuess(guessMode, index)}
+                    priority
+                  />
+                ))}
+              </div>
             </div>
           ) : (
             (Object.entries(currentState) as [[SnowmanPart, number]]).map(
