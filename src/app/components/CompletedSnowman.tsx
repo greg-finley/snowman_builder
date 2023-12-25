@@ -1,9 +1,9 @@
 import React from "react";
-import { CurrentState, SnowmanPart } from "../types";
+import { GuessState, SnowmanPart } from "../types";
 import SnowmanPartImage from "./SnowmanPartImage";
 
 interface CompletedSnowmanProps {
-  currentState: CurrentState;
+  currentState: GuessState;
 }
 
 export default function CompletedSnowman(props: CompletedSnowmanProps) {

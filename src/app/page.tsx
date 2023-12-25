@@ -11,7 +11,7 @@ import SnowmanPartOptions from "./components/SnowmanPartOptions";
 export default function Home() {
   const [refreshIndex, setRefreshIndex] = useState(0); // Just for the useEffect
   const [currentState, setCurrentState] = useState<CurrentState | null>(null);
-  const [guessState, setGuessState] = useState<GuessState | null>(null);
+  const [guessState, setGuessState] = useState<GuessState>({});
   const [guessMode, setGuessMode] = useState<SnowmanPart | null | "done">(null);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function Home() {
   }, [refreshIndex]);
 
   const handleBackToPhoto = () => {
-    setGuessState(null);
+    setGuessState({});
     setGuessMode(null);
   };
 
@@ -64,7 +64,10 @@ export default function Home() {
               />
             </div>
           ) : guessMode === "done" ? (
-            <p>{"You're done!"}</p>
+            <div>
+              <CompletedSnowman currentState={guessState} />
+              <CompletedSnowman currentState={currentState} />
+            </div>
           ) : (
             <div>
               <CompletedSnowman currentState={currentState} />
