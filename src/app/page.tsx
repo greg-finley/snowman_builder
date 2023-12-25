@@ -3,20 +3,15 @@
 import React, { useEffect, useState } from "react";
 
 import Image from "next/image";
-import { indexes, randomAssetIndex, toAssetFileName, AssetType } from "./utils";
+import { indexes, randomAssetIndex, toAssetFileName } from "./utils";
 import Button from "./components/Button";
-
-type CurrentState = {
-  [key in AssetType]: number;
-};
-
-type GuessState = Partial<CurrentState>;
+import { CurrentState, GuessState, SnowmanPart } from "./types";
 
 export default function Home() {
   const [refreshIndex, setRefreshIndex] = useState(0); // Just for the useEffect
   const [currentState, setCurrentState] = useState<CurrentState | null>(null);
   const [guessState, setGuessState] = useState<GuessState | null>(null);
-  const [guessMode, setGuessMode] = useState<AssetType | null>(null);
+  const [guessMode, setGuessMode] = useState<SnowmanPart | null>(null);
 
   useEffect(() => {
     setCurrentState({
@@ -57,7 +52,7 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            (Object.entries(currentState) as [[AssetType, number]]).map(
+            (Object.entries(currentState) as [[SnowmanPart, number]]).map(
               (item, index) => (
                 <Image
                   key={index}
