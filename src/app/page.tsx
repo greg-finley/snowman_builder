@@ -16,6 +16,9 @@ export default function Home() {
   const [guessMode, setGuessMode] = useState<SnowmanPart | "start" | "done">(
     "start",
   );
+  const [wins, setWins] = useState(0);
+  const [losses, setLosses] = useState(0);
+  const [doneMessage, setDoneMessage] = useState("");
 
   useEffect(() => {
     setCurrentState({
@@ -24,6 +27,18 @@ export default function Home() {
       body: randomAssetIndex(),
     });
   }, [refreshIndex]);
+
+  useEffect(() => {
+    if (guessMode === "done") {
+      if (_.isEqual(currentState, guessState)) {
+        setWins(wins + 1);
+        setDoneMessage("Correct!");
+      } else {
+        setLosses(losses + 1);
+        setDoneMessage("Wrong!");
+      }
+    }
+  }, [guessMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleBackToPhoto = () => {
     setGuessState({});
@@ -105,12 +120,17 @@ export default function Home() {
                   label="Your guess"
                 />
               </div>
-              <p>
-                {_.isEqual(currentState, guessState) ? "Correct!" : "Wrong!"}
-              </p>
+              <p>{doneMessage}</p>
               <Button onClick={handleStartOver} buttonText="New Snowman" />
             </div>
           ))}
+        {(!!wins || !!losses) && (
+          <div className="mt-4 flex flex-col items-center space-y-4">
+            {wins} Win{wins !== 1 && "s"}
+            <br />
+            {losses} Loss{losses !== 1 && "es"}
+          </div>
+        )}
       </div>
     </main>
   );
