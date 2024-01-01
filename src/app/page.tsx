@@ -111,7 +111,7 @@ export default function Home() {
             </div>
           ) : (
             // Player is done guessing
-            <div className="flex flex-col items-center space-y-4">
+            <div className="flex flex-col items-center">
               <div className="flex space-x-6">
                 <CompletedSnowman
                   currentState={currentState}
@@ -128,10 +128,17 @@ export default function Home() {
           ))}
         {(!!wins || !!losses) && (
           <div className="mt-4 flex flex-col items-center space-y-4">
-            {wins} Win{wins !== 1 && "s"}
-            <br />
-            {losses} Loss{losses !== 1 && "es"}
+            {wins} Win{wins !== 1 && "s"}, {losses} Loss{losses !== 1 && "es"}
           </div>
+        )}
+        {guessMode === "done" && (
+          <a
+            className="mt-8 text-xs flex justify-center text-blue-600 dark:text-blue-500 hover:underline"
+            href="https://github.com/greg-finley/snowman_builder"
+            target="_blank"
+          >
+            Source code
+          </a>
         )}
       </div>
     </main>
