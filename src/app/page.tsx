@@ -35,9 +35,11 @@ export default function Home() {
       if (_.isEqual(currentState, guessState)) {
         setWins(wins + 1);
         setDoneMessage("Correct!");
+        track("Win");
       } else {
         setLosses(losses + 1);
         setDoneMessage("Wrong!");
+        track("Loss");
       }
     }
   }, [guessMode]); // eslint-disable-line react-hooks/exhaustive-deps
