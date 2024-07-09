@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import ReactGA from "react-ga4";
 
 import { randomAssetIndex } from "./utils";
 import Button from "./components/Button";
@@ -10,6 +11,7 @@ import SnowmanPartOptions from "./components/SnowmanPartOptions";
 import _ from "lodash";
 
 export default function Home() {
+  ReactGA.initialize("G-1BL129N38W");
   const [refreshIndex, setRefreshIndex] = useState(0); // Just for the useEffect
   const [currentState, setCurrentState] = useState<CurrentState | null>(null);
   const [guessState, setGuessState] = useState<GuessState>({});
@@ -40,9 +42,16 @@ export default function Home() {
     }
   }, [guessMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const track = (action: string) =>
+    ReactGA.event({
+      category: "User",
+      action,
+    });
+
   const handleBackToPhoto = () => {
     setGuessState({});
     setGuessMode("start");
+    track("Back to Photo");
   };
 
   const handleGuess = (guessMode: SnowmanPart, guess: number) => {
@@ -56,12 +65,24 @@ export default function Home() {
     const nextPart =
       snowmanParts[snowmanParts.indexOf(guessMode) + 1] ?? "done";
     setGuessMode(nextPart);
+    track(`Guess ${guessMode}, guess number ${guess + 1}`);
   };
 
   const handleStartOver = () => {
     setRefreshIndex(refreshIndex + 1);
     setGuessState({});
     setGuessMode("start");
+    track("New Snowman");
+  };
+
+  const handleLetsRebuild = () => {
+    setGuessMode(snowmanParts[0]);
+    track("Let's Rebuild");
+  };
+
+  const handleChangeSnowman = () => {
+    setRefreshIndex(refreshIndex + 1);
+    track("Change Snowman");
   };
 
   return (
@@ -84,11 +105,11 @@ export default function Home() {
               />
               <div className="flex justify-center gap-4">
                 <Button
-                  onClick={() => setGuessMode(snowmanParts[0])}
+                  onClick={handleLetsRebuild}
                   buttonText="Let's Rebuild!"
                 />
                 <Button
-                  onClick={() => setRefreshIndex(refreshIndex + 1)}
+                  onClick={handleChangeSnowman}
                   buttonText="Change Snowman"
                   variant="dull"
                 />
