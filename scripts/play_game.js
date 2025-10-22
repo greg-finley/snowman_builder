@@ -1,9 +1,15 @@
 const { chromium } = require("playwright");
+const fs = require("fs");
 
 // Get mode from command line argument: 'random' or 'perfect' (default: perfect)
 const mode = process.argv[2] || "perfect";
 
 (async () => {
+  // Create screenshots directory if it doesn't exist
+  if (!fs.existsSync("screenshots")) {
+    fs.mkdirSync("screenshots");
+  }
+
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
 
@@ -39,18 +45,27 @@ const mode = process.argv[2] || "perfect";
 
   // Take a screenshot of Billy's snowman
   console.log("\n📸 Taking a screenshot of Billy's snowman...");
-  await page.screenshot({ path: "billys-snowman.png" });
-  console.log("   Screenshot saved to billys-snowman.png\n");
+  await page.screenshot({ path: "screenshots/01-billys-snowman.png" });
+  console.log("   Screenshot saved to screenshots/01-billys-snowman.png\n");
 
   // Click "Let's Rebuild!"
   await page.click("text=Let's Rebuild!");
   console.log('🔨 Clicked "Let\'s Rebuild!" - Starting the game...\n');
 
   // Play the game
+  let stepNumber = 2;
   for (const part of parts) {
     // Wait for the question to appear
     await page.waitForSelector(`text=Which ${part} was it?`);
     console.log(`❓ Question: "Which ${part} was it?"`);
+
+    // Take screenshot of the question
+    const questionScreenshot = `screenshots/${String(stepNumber).padStart(
+      2,
+      "0",
+    )}-question-${part}.png`;
+    await page.screenshot({ path: questionScreenshot });
+    console.log(`   📸 Screenshot saved to ${questionScreenshot}`);
 
     // Get all clickable divs that contain images
     const options = await page.locator("div.cursor-pointer").all();
@@ -77,6 +92,7 @@ const mode = process.argv[2] || "perfect";
 
     await options[chosenIndex].click();
     console.log(`   ✓ Clicked option ${chosenIndex + 1}\n`);
+    stepNumber++;
   }
 
   // Wait for results
@@ -98,8 +114,8 @@ const mode = process.argv[2] || "perfect";
   console.log("=".repeat(50) + "\n");
 
   // Take a screenshot of the comparison
-  await page.screenshot({ path: "game-result.png" });
-  console.log("📸 Screenshot of result saved to game-result.png\n");
+  await page.screenshot({ path: "screenshots/05-result.png" });
+  console.log("📸 Screenshot of result saved to screenshots/05-result.png\n");
 
   // Check the score
   const scoreText = await page.textContent("body");
