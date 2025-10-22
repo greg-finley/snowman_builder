@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import ReactGA from "react-ga4";
 
-import { randomAssetIndex } from "./utils";
+import { randomAssetIndex, toAssetFileName, indexes } from "./utils";
 import Button from "./components/Button";
 import { snowmanParts, CurrentState, GuessState, SnowmanPart } from "./types";
 import CompletedSnowman from "./components/CompletedSnowman";
@@ -21,6 +21,37 @@ export default function Home() {
   const [wins, setWins] = useState(0);
   const [losses, setLosses] = useState(0);
   const [doneMessage, setDoneMessage] = useState("");
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+
+  // Preload all images to prevent the browser from loading only the correct ones first
+  useEffect(() => {
+    const imagesToLoad: string[] = [];
+    snowmanParts.forEach((part) => {
+      indexes.forEach((index) => {
+        imagesToLoad.push(toAssetFileName(part, index));
+      });
+    });
+
+    let loadedCount = 0;
+    const totalImages = imagesToLoad.length;
+
+    imagesToLoad.forEach((src) => {
+      const img = new Image();
+      img.onload = () => {
+        loadedCount++;
+        if (loadedCount === totalImages) {
+          setImagesLoaded(true);
+        }
+      };
+      img.onerror = () => {
+        loadedCount++;
+        if (loadedCount === totalImages) {
+          setImagesLoaded(true);
+        }
+      };
+      img.src = src;
+    });
+  }, []);
 
   useEffect(() => {
     setCurrentState({
@@ -97,7 +128,10 @@ export default function Home() {
           <br />
           Take a look and then help him rebuild it!
         </p>
-        {currentState &&
+        {!imagesLoaded ? (
+          <div className="flex justify-center items-center p-8">Loading...</div>
+        ) : (
+          currentState &&
           (guessMode === "start" ? (
             // Player is at the initial app screen
             <div>
@@ -148,7 +182,8 @@ export default function Home() {
               <p>{doneMessage}</p>
               <Button onClick={handleStartOver} buttonText="New Snowman" />
             </div>
-          ))}
+          ))
+        )}
         {(!!wins || !!losses) && (
           <div className="mt-4 flex flex-col items-center space-y-4">
             {wins} Win{wins !== 1 && "s"}, {losses} Loss{losses !== 1 && "es"}
