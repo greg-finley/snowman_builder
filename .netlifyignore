@@ -1,0 +1,5 @@
+native-app/
+*.xcworkspace
+*.xcodeproj
+*.xcuserstate
+.expo/
